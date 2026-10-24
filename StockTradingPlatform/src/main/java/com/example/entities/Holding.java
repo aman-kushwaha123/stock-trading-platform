@@ -21,7 +21,7 @@ import java.util.UUID;
 
 
 )
-class Holding {
+public class Holding {
     //@Id knows that this is a primary key
     //sequence meaning while saving it will not ask db for permission to assigning id db give prebook of id to assign
     @Id
