@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface TransactionService {
 
-    Transaction createTransaction(Transaction transaction);
+    Transaction buyTrade(Transaction transaction);
+
+    Transaction sellTrade(Transaction transaction);
 
     Transaction getTransactionById(Long id);
 

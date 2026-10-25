@@ -39,7 +39,7 @@ public class Transaction {
     private Stock stock;
 
     @Column(name="quantity",nullable = false)
-    private Long quantity;
+    private Integer quantity;
 
     @Enumerated(EnumType.STRING)
     @Column(name="transaction_type",nullable=false,length = 10)
@@ -58,6 +58,7 @@ public class Transaction {
     @Column(name="created_at",nullable = false,updatable = false)
     private LocalDateTime createdAt;
 
+    @PrePersist
     protected void onCreate(){
         LocalDateTime now=LocalDateTime.now();
         this.createdAt=now;
@@ -79,11 +80,11 @@ public class Transaction {
         this.stock = stock;
     }
 
-    public Long getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

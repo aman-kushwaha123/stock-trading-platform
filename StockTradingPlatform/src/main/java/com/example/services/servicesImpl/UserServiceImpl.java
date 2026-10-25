@@ -4,6 +4,7 @@ import com.example.DTOs.UserUpdateDTO;
 import com.example.entities.User;
 import com.example.repositories.User_Repo;
 import com.example.services.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
+import java.math.BigDecimal;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 
 @Service
@@ -84,5 +86,22 @@ public class UserServiceImpl implements UserService {
         else{
             return false;
         }
+    }
+
+    @Override
+    public void reduceCashBalance(Long userId,BigDecimal cash){
+          User user=userRepo.findById(userId).orElseThrow(()->new EntityNotFoundException("User not found"));
+           if(cash==null){
+               throw new IllegalArgumentException("Provided cashBalance is null.");
+           }
+            //• 1 if the first value is greater than the second.
+            //• 0 if the values are equal.
+            //• -1 if the first value is less than the second.
+           if(cash.compareTo(user.getCashBalance())>0){
+               throw new IllegalArgumentException("User don't have enough cashBalance.");
+           }
+           BigDecimal newCashBalance=user.getCashBalance().subtract(cash);
+           user.setCashBalance(newCashBalance);
+           userRepo.save(user);
     }
 }
