@@ -25,13 +25,10 @@ public class UserController {
 
     @PostMapping("/add")
     ResponseEntity<Map<String,String>> createUser(@RequestBody User user){
-        try {
+
                 userService.createUser(user);
                 return ResponseEntity.ok(Map.of("message", "User Successfully Created."));
-        }
-        catch(Exception e){
-            return ResponseEntity.ok(Map.of("message","Something went wrong"));
-        }
+
 
     }
 
@@ -39,39 +36,20 @@ public class UserController {
     ResponseEntity<Map<String,String>> updateUser(@PathVariable(value = "id") Long id,
                                                  @RequestBody UserUpdateDTO userUpdateDTO)
     {
-       try{
+
            User userUpdateDTO1=userService.updateUserById(id,userUpdateDTO);
            return ResponseEntity.ok(Map.of("message","Successfully updated username : "+userUpdateDTO1.getUsername()));
-       }
-       catch (IllegalArgumentException e){
-            return ResponseEntity.ok(Map.of("message","Some arguments may be null provided"));
-       }
-       catch(UserPrincipalNotFoundException e){
-           return ResponseEntity.ok(Map.of("message","User not found"));
-       }
+
     }
 
     @GetMapping("/get/{id}")
     ResponseEntity<UserResponse> getUserById(@PathVariable(value = "id") Long id){
-        try{
                UserResponse userResponse=new UserResponse();
                User result= userService.getUserById(id);
                userResponse.setUser(result);
                userResponse.setMessage(Map.of("message","Successfully"));
                return ResponseEntity.ok(userResponse);
-        }
-        catch(UserPrincipalNotFoundException e){
-            UserResponse userResponse1=new UserResponse();
-            userResponse1.setUser(null);
-            userResponse1.setMessage(Map.of("message","User not found"));
-            return ResponseEntity.ok(userResponse1);
-        }
-        catch(IllegalArgumentException e){
-            UserResponse userResponse2=new UserResponse();
-            userResponse2.setUser(null);
-            userResponse2.setMessage(Map.of("message","Provided id is null"));
-            return ResponseEntity.ok(userResponse2);
-        }
+
     }
 
     @GetMapping("/get/all")

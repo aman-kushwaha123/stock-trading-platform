@@ -64,6 +64,10 @@ public class Transaction {
         this.createdAt=now;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public User getUser() {
         return user;
     }
@@ -85,6 +89,9 @@ public class Transaction {
     }
 
     public void setQuantity(Integer quantity) {
+        if(quantity<0){
+            throw new IllegalArgumentException("Quantity cannot be less than 0");
+        }
         this.quantity = quantity;
     }
 
@@ -101,6 +108,10 @@ public class Transaction {
     }
 
     public void setPricePerShare(BigDecimal pricePerShare) {
+        if(pricePerShare.compareTo(BigDecimal.valueOf(0))<0){
+            throw new IllegalArgumentException("PricePerShare cannot be less than 0.");
+        }
+
         this.pricePerShare = pricePerShare;
     }
 
@@ -109,6 +120,9 @@ public class Transaction {
     }
 
     public void setTotalPrice(BigDecimal totalPrice) {
+        if(totalPrice.compareTo(BigDecimal.valueOf(0))<0){
+            throw new IllegalArgumentException("totalPrice cannot be less than 0.");
+        }
         this.totalPrice = totalPrice;
     }
 

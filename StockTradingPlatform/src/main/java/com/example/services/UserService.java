@@ -11,15 +11,18 @@ import java.util.List;
 public interface UserService {
     User createUser(User user);
 
-    User getUserById(Long id) throws UserPrincipalNotFoundException,IllegalArgumentException;
+    User getUserById(Long id) ;
 
     Page<User> getAllUser(int page, int size);
 
-    User updateUserById(Long id, UserUpdateDTO userUpdateDTO) throws IllegalArgumentException,UserPrincipalNotFoundException;
+    User updateUserById(Long id, UserUpdateDTO userUpdateDTO) ;
+
 
     Boolean deleteUserById(Long id);
 
-    void reduceCashBalance(Long userId,BigDecimal cash);
+    User reduceCashBalance(Long userId,BigDecimal cash);
+
+    User increaseCashBalance(Long userId,BigDecimal cash);
 
 
 

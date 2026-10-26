@@ -1,14 +1,14 @@
 package com.example.controllers;
 
+import com.example.DTOs.TransactionDTO;
+import com.example.Enums.TransactionType;
 import com.example.ResponseDTOs.TransactionResponseDTO;
 import com.example.entities.Transaction;
 import com.example.services.TransactionService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.logging.Logger;
 
@@ -18,29 +18,46 @@ import java.util.logging.Logger;
 public class TransactionController {
 
     private TransactionService transactionService;
-    private Logger logger;
 
-    protected TransactionController(TransactionService transactionService,
-    Logger logger){
+
+    protected TransactionController(TransactionService transactionService){
         this.transactionService=transactionService;
-        this.logger=logger;
+
     }
 
     @PostMapping("/buy")
-    ResponseEntity<TransactionResponseDTO> buyTrade(@RequestBody Transaction transaction){
-        try{
-             transactionService.buyTrade(transaction);
+    ResponseEntity<TransactionResponseDTO> buyTrade(@RequestBody TransactionDTO transactionDTO){
+           transactionDTO.setTransactionType(TransactionType.BUY);
+             transactionService.buyTrade(transactionDTO);
              TransactionResponseDTO transactionResponseDTO=new TransactionResponseDTO();
              transactionResponseDTO.setMessage("Transaction added Successfully.");
              return ResponseEntity.ok(transactionResponseDTO);
-        }
-        catch(Exception e){
-
-            // ALWAYS log the actual exception stack trace so engineers can debug it
-            log.error("Unexpected error occurred", e);
-            TransactionResponseDTO transactionResponseDTO=new TransactionResponseDTO();
-            transactionResponseDTO.setMessage("Something went wrong.");
-            return ResponseEntity.ok(transactionResponseDTO);
-        }
     }
+
+    @PostMapping("/sell")
+    ResponseEntity<TransactionResponseDTO> sellTrade(@RequestBody TransactionDTO transactionDTO){
+        transactionDTO.setTransactionType(TransactionType.SELL);
+
+            transactionService.sellTrade(transactionDTO);
+            TransactionResponseDTO transactionResponseDTO=new TransactionResponseDTO();
+            transactionResponseDTO.setMessage("Transaction added Successfully.");
+            return ResponseEntity.ok(transactionResponseDTO);
+
+
+    }
+
+    @GetMapping("/get/all")
+    ResponseEntity<TransactionResponseDTO> getAllTransactionByUserId(@RequestParam(value = "userId") Long userId,
+                                                    @RequestParam(value="page") int page,
+                                                    @RequestParam(value="size") int size){
+
+            Page<Transaction> allTransactions=transactionService.getAllTransactionById(page,size,userId);
+            TransactionResponseDTO transactionResponseDTO=new TransactionResponseDTO();
+            transactionResponseDTO.setTransactionsByUserId(allTransactions);
+            transactionResponseDTO.setMessage("Successfully Fetched All Transaction.");
+            return ResponseEntity.ok(transactionResponseDTO);
+
+    }
+
+
 }

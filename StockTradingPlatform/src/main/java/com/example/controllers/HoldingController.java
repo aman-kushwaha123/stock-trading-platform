@@ -44,81 +44,39 @@ public class HoldingController {
     }*/
 
 
-    @PutMapping("/update/{id}")
-    ResponseEntity<HoldingResponse> updateById(@PathVariable(value="id") Long id,
-                                               @RequestBody Holding holding){
-        try{
-            Holding holding1=holdingService.updateHoldingById(id,holding);
-            HoldingResponse holdingResponse=HoldingResponse.builder()
-                    .holding(holding1)
-                    .message("Successfully Holding updated .").build();
-            return ResponseEntity.ok(holdingResponse);
-        }
-        catch(EntityNotFoundException e){
-            HoldingResponse holdingResponse=HoldingResponse.builder()
-                    .message("Holding not exist.").build();
-            return ResponseEntity.ok(holdingResponse);
-        }
-        catch (Exception e ){
-            HoldingResponse holdingResponse=HoldingResponse.builder()
-                    .message("Something went wrong.").build();
-            return ResponseEntity.ok(holdingResponse);
-        }
-    }
 
 
 
     @GetMapping("/get/{id}")
     ResponseEntity<HoldingResponse> getById(@PathVariable(value="id") Long id){
-        try{
             Holding result=holdingService.getHoldingById(id);
             HoldingResponse holdingResponse=HoldingResponse.builder()
                     .holding(result)
                     .message("Successfully Retrieval.").build();
             return ResponseEntity.ok(holdingResponse);
-        }
-        catch (EntityNotFoundException e){
-            HoldingResponse holdingResponse=HoldingResponse.builder()
-                    .message("Holding not found.").build();
-            return ResponseEntity.ok(holdingResponse);
-        }
-        catch (Exception e){
-            HoldingResponse holdingResponse=HoldingResponse.builder()
-                    .message("Something went wrong.").build();
-            return ResponseEntity.ok(holdingResponse);
-        }
+
     }
 
     @GetMapping("/get/all")
     ResponseEntity<HoldingResponse> getAllHolding(@RequestParam(value = "page") int page,
-                                                  @RequestParam(value="size") int size){
-        try{
-            Page<Holding> holdingsPage=holdingService.getAllHolding(page,size);
+                                                  @RequestParam(value="size") int size,
+                                                  @RequestParam(value="userId") Long userId){
+
+            Page<Holding> holdingsPage=holdingService.getAllHoldingByUserId(page,size,userId);
             HoldingResponse holdingResponse=HoldingResponse.builder()
                     .holdingsPage(holdingsPage)
                     .message("Successfully Fetched ALL Holdings.").build();
             return ResponseEntity.ok(holdingResponse);
-        }
-        catch(Exception e){
-            HoldingResponse holdingResponse=HoldingResponse.builder()
-                    .message("Something went wrong.").build();
-            return ResponseEntity.ok(holdingResponse);
-        }
+
     }
 
     @DeleteMapping("/delete/{id}")
     ResponseEntity<HoldingResponse> deleteHoldingById(@PathVariable(value="id") Long id){
-        try{
             Boolean result=holdingService.deleteHoldingById(id);
             HoldingResponse holdingResponse=HoldingResponse.builder()
                     .message("Successfully holding deleted.").build();
             return ResponseEntity.ok(holdingResponse);
-        }
-        catch (Exception e){
-            HoldingResponse holdingResponse=HoldingResponse.builder()
-                    .message("Something went wrong.").build();
-            return ResponseEntity.ok(holdingResponse);
-        }
+
     }
 
     

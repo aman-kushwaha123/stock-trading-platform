@@ -38,6 +38,7 @@ public class PortfolioSnapshot {
 
     //• Total Portfolio Value is NOT just the money used to buy stocks.
     // It represents the entire net worth of the user's trading account at that exact second.
+    //cashBalance + total stock purchased or total investment of all owned stocks
     @Column(name="total_portfolio_value",nullable = false,precision = 15,scale=2)
     private BigDecimal totalPortFolioValue;
 

@@ -10,8 +10,9 @@ import java.util.List;
 public interface HoldingService {
     Holding createHolding(Transaction transaction);
     Holding getHoldingById(Long id);
-    Page<Holding> getAllHolding(int page,int size);
+    Page<Holding> getAllHoldingByUserId(int page,int size,Long userId);
     Holding updateHoldingById(Long id,Holding holding);
     Holding updateHoldingAfterBuy(Transaction transaction,Holding holding);
+    Holding updateHoldingAfterSell(Transaction transaction,Holding holding);
     Boolean deleteHoldingById(Long id);
 }

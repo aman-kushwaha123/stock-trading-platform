@@ -11,10 +11,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.math.BigDecimal;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -37,11 +39,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) throws UserPrincipalNotFoundException,IllegalArgumentException {
+    public User getUserById(Long id)  {
         if(id==null){
             throw new IllegalArgumentException("provided id for retrieval is null");
         }
-        User user=userRepo.findById(id).orElseThrow(()->new UserPrincipalNotFoundException("User not found"));
+        User user=userRepo.findById(id).orElseThrow(()->new IllegalArgumentException("User not found"));
         return user;
     }
 
@@ -55,7 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUserById(Long id, UserUpdateDTO userUpdateDTO) throws IllegalArgumentException,UserPrincipalNotFoundException
+    public User updateUserById(Long id, UserUpdateDTO userUpdateDTO)
     {
         User result;
         if(id==null){
@@ -68,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
         User existUser=userRepo.findById(id).orElseThrow(()->new IllegalArgumentException("User not found"));
         if(existUser==null){
-            throw new UserPrincipalNotFoundException("User not found");
+            throw new IllegalArgumentException("User not found");
         }
         existUser.setUsername(userUpdateDTO.getUsername());
         existUser.setCashBalance(userUpdateDTO.getCashBalance());
@@ -89,7 +91,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void reduceCashBalance(Long userId,BigDecimal cash){
+    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRES_NEW)
+    public User reduceCashBalance(Long userId,BigDecimal cash){
           User user=userRepo.findById(userId).orElseThrow(()->new EntityNotFoundException("User not found"));
            if(cash==null){
                throw new IllegalArgumentException("Provided cashBalance is null.");
@@ -100,8 +103,31 @@ public class UserServiceImpl implements UserService {
            if(cash.compareTo(user.getCashBalance())>0){
                throw new IllegalArgumentException("User don't have enough cashBalance.");
            }
+          System.out.println("Reducing cashBalance......");
            BigDecimal newCashBalance=user.getCashBalance().subtract(cash);
            user.setCashBalance(newCashBalance);
-           userRepo.save(user);
+           return userRepo.save(user);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRES_NEW)
+    public User increaseCashBalance(Long userId,BigDecimal cash){
+
+        User user=userRepo.findById(userId).orElseThrow(()->new EntityNotFoundException("User not found"));
+        if(cash==null){
+            throw new IllegalArgumentException("Provided cashBalance is null.");
+        }
+        //• 1 if the first value is greater than the second.
+        //• 0 if the values are equal.
+        //• -1 if the first value is less than the second.
+        if(cash.compareTo(BigDecimal.valueOf(0))<0){
+            throw new IllegalArgumentException("Selling price cannot be less than 0.");
+        }
+        System.out.println("Increasing cashBalance...");
+        BigDecimal newCashBalance=user.getCashBalance().add(cash);
+        user.setCashBalance(newCashBalance);
+        return userRepo.save(user);
+    }
+
+
 }
