@@ -32,7 +32,6 @@ public class HoldingServiceImpl implements HoldingService {
     @Autowired private Stock_Repo stockRepo;
 
     @Override
-    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRES_NEW)
     public Holding createHolding(Transaction transaction) {
         if(transaction==null){
             throw new IllegalArgumentException("Provided transaction is null");

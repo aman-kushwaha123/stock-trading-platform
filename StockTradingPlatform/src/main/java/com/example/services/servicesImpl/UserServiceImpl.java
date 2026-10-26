@@ -91,7 +91,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRES_NEW)
     public User reduceCashBalance(Long userId,BigDecimal cash){
           User user=userRepo.findById(userId).orElseThrow(()->new EntityNotFoundException("User not found"));
            if(cash==null){
@@ -110,7 +109,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRES_NEW)
     public User increaseCashBalance(Long userId,BigDecimal cash){
 
         User user=userRepo.findById(userId).orElseThrow(()->new EntityNotFoundException("User not found"));
