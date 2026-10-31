@@ -1,8 +1,11 @@
 package com.example.services;
 
+import com.example.DTOs.UserCredentialsDTO;
 import com.example.DTOs.UserUpdateDTO;
+import com.example.ResponseDTOs.UserLoginResponseDTO;
 import com.example.entities.User;
 import org.springframework.data.domain.Page;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 
 import java.math.BigDecimal;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
@@ -10,6 +13,8 @@ import java.util.List;
 
 public interface UserService {
     User createUser(User user);
+
+    UserLoginResponseDTO verifyUser(UserCredentialsDTO userCredentialsDTO) throws AuthenticationCredentialsNotFoundException;
 
     User getUserById(Long id) ;
 

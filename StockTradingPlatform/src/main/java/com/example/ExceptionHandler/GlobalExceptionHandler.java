@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -39,6 +40,17 @@ public class GlobalExceptionHandler {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 HttpStatus.BAD_REQUEST.value(),
                 "Null value",
+                e.getMessage(),
+                req.getRequestURI()
+        );
+        return new ResponseEntity(errorResponse,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpClientErrorException.Unauthorized.class)
+    public ResponseEntity<ErrorResponseDTO> handleIllegalArgument(HttpClientErrorException.Unauthorized e, HttpServletRequest req){
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Unauthorized",
                 e.getMessage(),
                 req.getRequestURI()
         );

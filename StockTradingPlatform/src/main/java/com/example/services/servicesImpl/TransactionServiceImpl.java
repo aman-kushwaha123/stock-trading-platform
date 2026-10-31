@@ -86,7 +86,9 @@ public class TransactionServiceImpl implements TransactionService {
         catch(Exception e){
             //separate Transaction
             System.out.println("Transaction failed and saved.. : "+e);
-            return self.markASFailed(transaction.getId());
+            Transaction failedTransaction = self.markASFailed(transaction.getId());
+            throw e;
+
 
 
         }

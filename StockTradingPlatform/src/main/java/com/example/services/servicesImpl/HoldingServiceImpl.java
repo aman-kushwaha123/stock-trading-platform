@@ -134,7 +134,7 @@ public class HoldingServiceImpl implements HoldingService {
         Integer newQuantity=oldQuantity-transaction.getQuantity();
         BigDecimal newTotalInvestment;
         BigDecimal newAvgBuyPrice;
-        if(newQuantity!=0 && newQuantity<0){
+        if(newQuantity!=0 && newQuantity>0){
              newTotalInvestment=oldTotalInvestment.subtract(transaction.getTotalPrice());
              newAvgBuyPrice=newTotalInvestment
                     .divide(BigDecimal.valueOf(newQuantity), 4, RoundingMode.HALF_UP);

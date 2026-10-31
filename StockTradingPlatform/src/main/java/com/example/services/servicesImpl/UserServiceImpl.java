@@ -1,21 +1,31 @@
 package com.example.services.servicesImpl;
 
+import com.example.DTOs.UserCredentialsDTO;
 import com.example.DTOs.UserUpdateDTO;
+import com.example.ResponseDTOs.UserLoginResponseDTO;
 import com.example.entities.User;
 import com.example.repositories.User_Repo;
 import com.example.services.UserService;
+import io.jsonwebtoken.security.Password;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import java.math.BigDecimal;
+import java.util.Base64;
+import java.util.Map;
 
 
 @Service
@@ -24,10 +34,24 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private User_Repo userRepo;
 
+    @Autowired private JwtService jwtService;
+
+    private AuthenticationManager authenticationManager;
+
+    UserServiceImpl(AuthenticationManager authenticationManager){
+        this.authenticationManager=authenticationManager;
+    }
+
+
+
+
     @Override
     public User createUser(User user) throws NullPointerException {
         User result;
+        BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
         if(user!=null){
+            String hashedPass=passwordEncoder.encode(user.getPassword());
+            user.setPassword(hashedPass);
             result=userRepo.save(user);
             return result;
         }
@@ -36,6 +60,27 @@ public class UserServiceImpl implements UserService {
         }
 
 
+    }
+
+    @Override
+    public UserLoginResponseDTO verifyUser(UserCredentialsDTO userCredentialsDTO) throws AuthenticationCredentialsNotFoundException {
+        String token="";
+
+        User user=userRepo.findByUsername(userCredentialsDTO.getUsername())
+                .orElseThrow(()->new IllegalArgumentException("User not found."));
+        Authentication authentication=authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(userCredentialsDTO.getUsername(),userCredentialsDTO.getPassword()));
+        if(authentication.isAuthenticated()){
+            token=jwtService.generateToken(userCredentialsDTO.getUsername());
+            UserLoginResponseDTO userLoginResponseDTO=UserLoginResponseDTO.builder()
+                    .user(user)
+                    .token(token)
+                    .build();
+            return  userLoginResponseDTO;
+        }
+        else{
+            throw new AuthenticationCredentialsNotFoundException("Given Credentials are not found.");
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.entities;
 
+import com.example.Enums.UserRoles;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -14,11 +15,20 @@ public class User {
     @GeneratedValue(strategy=GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name="username",nullable = false)
+    @Column(name="username",nullable = false,unique = true,updatable = false)
     private String username;
 
+
+    @Column(name="password",nullable = false,updatable = false)
+    private String password;
+
+
+    @Column(name="role")
+    @Enumerated(EnumType.STRING)
+    private UserRoles role= UserRoles.USER;
+
     @Column(name = "cash_balance",nullable = false)
-    private BigDecimal cashBalance;
+    private BigDecimal cashBalance=BigDecimal.ZERO;
 
     //parent(user) or inverse side and child(holdings)
     //orphanRemoval:-automatically deletes child entities when they are removed from their parent's collection
@@ -58,6 +68,22 @@ public class User {
             userId= UUID.randomUUID().toString();
         }
     }*/
+
+    public UserRoles getRole() {
+        return role;
+    }
+
+    public void setRole(UserRoles role) {
+        this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public Long getId() {
         return id;
