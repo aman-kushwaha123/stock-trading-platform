@@ -1,0 +1,16 @@
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+
+/*
+Your Tailwind CSS Preflight (CSS reset) is interfering with PrimeNG 17 button styles.
+Add corePlugins: { preflight: false }: in tailwindconfig.js
+This disables Tailwind's CSS reset while keeping its utility classes.
+*/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
