@@ -26,7 +26,8 @@ public class PortfolioScheduling {
 
      //This example runs at 4 PM IST, Monday to Friday.
     //second minute hour day of month month day of week
-     @Scheduled(cron = "0 0 16 * * MON-FRI",zone = "Asia/Kolkata")
+    //*/2 (every 2nd minute) * (every hour) * (every day of month) * (every month) * (every day of week).
+     @Scheduled(cron = "0 */30 * * * MON-FRI",zone = "Asia/Kolkata")
      public void generatePortfolio(){
          List<User> users=userRepo.findAll();
          for(User user:users){

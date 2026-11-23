@@ -1,6 +1,7 @@
 package com.example.services;
 
 import com.example.DTOs.UserCredentialsDTO;
+import com.example.DTOs.UserRegisterDTO;
 import com.example.DTOs.UserUpdateDTO;
 import com.example.ResponseDTOs.UserLoginResponseDTO;
 import com.example.entities.User;
@@ -12,7 +13,7 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 
 public interface UserService {
-    User createUser(User user);
+    User createUser(UserRegisterDTO userRegisterDTO);
 
     UserLoginResponseDTO verifyUser(UserCredentialsDTO userCredentialsDTO) throws AuthenticationCredentialsNotFoundException;
 

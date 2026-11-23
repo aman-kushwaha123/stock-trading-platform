@@ -1,1 +1,135 @@
-<app-header></app-header>
+<mat-sidenav-container class="h-screen w-screen" max-h-[85vh]>
+  <mat-sidenav mode="over" class="!bg-zinc-950 !w-90 border-r overflow-y-auto [&_.mat-drawer-inner-container::-webkit-scrollbar]:hidden [&_.mat-drawer-inner-container]:[scrollbar-width:none] [&_.mat-drawer-inner-container]:[-ms-overflow-style:none]
+   border-zinc-800 text-white" #sidenav>
+    <div class="flex flex-col h-full p-5">
+
+      <!-- Header & Close Button -->
+      <div class="flex items-center justify-between pb-6 mb-6 border-b border-zinc-800">
+        <span class="text-xs font-semibold tracking-widest text-zinc-400 uppercase">
+          Admin Menu
+        </span>
+        <button (click)="sidenav.close()" class="text-zinc-400 hover:text-white transition-colors">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="flex flex-col space-y-2">
+        <a routerLink="/admin/create-stock"
+          routerLinkActive="!bg-yellow-400/10 !text-yellow-300 border-l-2 border-yellow-300" (click)="sidenav.close()"
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-xl font-normal text-zinc-300 hover:bg-zinc-600 hover:text-white transition-all cursor-pointer">
+          <span>Create Stock-Admin</span>
+        </a>
+        <a routerLink="/admin/all-users"
+          routerLinkActive="!bg-yellow-400/10 !text-yellow-300 border-l-2 border-yellow-300" (click)="sidenav.close()"
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-xl font-normal text-zinc-300 hover:bg-zinc-600 hover:text-white transition-all cursor-pointer">
+          <span>All Users-Admin</span>
+        </a>
+      </nav>
+
+    </div>
+  </mat-sidenav>
+
+  <!-- Main Content Area -->
+  <!-- Header at the top -->
+  <mat-sidenav-content class="bg-gray-100 w-full h-full flex flex-col">
+    <!-- Optional Top Header -->
+
+    <div class="flex items-center justify-between bg-slate-950 border-b border-slate-800 px-4 py-4">
+
+      <div class="flex items-center justify-start pl-5 gap-2">
+        <button mat-icon-button *ngIf="userService.isAdmin" (click)="sidenav?.toggle()"
+          class="mr-2 border-0 text-white hidden md:block bg-transparent ">
+          <mat-icon class="!text-white">menu</mat-icon>
+        </button>
+        <!-- Logo -->
+         <a routerLink="/" class="text-2xl font-bold text-white no-underline">
+          Ak<span class="text-emerald-400">Trade</span>
+        </a>
+        
+      </div>
+
+      s
+      <!-- Profile -->
+      <div class="flex items-center justify-end gap-3">
+        <div>
+          <button type="button"  (click)="userService.swggerUI()" *ngIf="userService.isLoggedIn && userService.isAdmin"
+            class="flex w-full items-center gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 px-4 py-2.5 text-sm font-medium text-blue-400 transition-colors hover:bg-blue-500/20 hover:text-red-300">
+            <mat-icon class="!h-5 !w-5 !text-[20px] !leading-none">api</mat-icon>
+            <span class="w-20">Swgger-UI</span>
+          </button>
+        </div>
+        <button type="button" class=" flex items-center justify-center gap-2 w-full  rounded-lg 
+          border border-emerald-500/20 bg-red-500/10 px-4 py-2.5 text-sm font-medium
+         text-red-400 transition-colors hover:bg-red-500/20 hover:text-red-300"
+         routerLink="/myAccount" *ngIf="userService.isLoggedIn">
+          <div class="!h-5 !w-5 rounded-full bg-emerald-500
+                  flex items-center justify-center
+                  text-white font-semibold">
+            A
+          </div>
+          <span class="text-white text-sm font-medium">
+            My Account
+          </span>
+        </button>
+        <div>
+          <button type="button" (click)="userService.logOut()" 
+            class="flex w-full items-center gap-3 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/20 hover:text-red-300">
+            <mat-icon class="!h-5 !w-5 !text-[20px] !leading-none">logout</mat-icon>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- tabs-->
+    <div *ngIf="userService.isLoggedIn"
+     class="bg-slate-950 border-b border-slate-800 px-4 py-4 ">
+      <mat-tab-group #tabGroup class="" mat-stretch-tabs="false" animationDuration="0ms" dynamicHeight>
+        <mat-tab>
+          <ng-template mat-tab-label class="!bg-blue-400">
+            <span class="!text-white text-xl font-thin" routerLink="/stocks" routerLinkActive>Stocks</span>
+          </ng-template>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span class="!text-white text-xl font-thin" routerLink="/transactions" routerLinkActive>Transactions</span>
+          </ng-template>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span class="!text-white text-xl font-thin" routerLink="/holdings" routerLinkActive>Holdings</span>
+          </ng-template>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span class="!text-white text-xl font-thin" routerLink="/portfolioSnapshots" routerLinkActive>Portfolio
+              Snapshots</span>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+
+
+
+
+<mat-divider ></mat-divider>
+    <!-- Routed Pages -->
+    <!-- Main content wrapper, apply blur when loading -->
+   <main>
+     <mat-tab-nav-panel #tabPanel>
+      <router-outlet></router-outlet>
+    </mat-tab-nav-panel>
+   </main>
+
+
+    <!-- Footer at the bottom -->
+     <mat-divider ></mat-divider>
+    <footer>
+      <app-footer></app-footer>
+    </footer>
+
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

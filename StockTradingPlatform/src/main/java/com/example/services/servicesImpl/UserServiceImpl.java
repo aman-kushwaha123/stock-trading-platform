@@ -1,6 +1,8 @@
 package com.example.services.servicesImpl;
 
 import com.example.DTOs.UserCredentialsDTO;
+import com.example.DTOs.UserDTO;
+import com.example.DTOs.UserRegisterDTO;
 import com.example.DTOs.UserUpdateDTO;
 import com.example.ResponseDTOs.UserLoginResponseDTO;
 import com.example.entities.User;
@@ -8,6 +10,7 @@ import com.example.repositories.User_Repo;
 import com.example.services.UserService;
 import io.jsonwebtoken.security.Password;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,12 +49,15 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User createUser(User user) throws NullPointerException {
+    public User createUser(UserRegisterDTO userRegisterDTO) throws NullPointerException {
         User result;
         BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
-        if(user!=null){
-            String hashedPass=passwordEncoder.encode(user.getPassword());
+        if(userRegisterDTO!=null){
+            String hashedPass=passwordEncoder.encode(userRegisterDTO.getPassword());
+            User user=new User();
+            user.setUsername(userRegisterDTO.getUsername());
             user.setPassword(hashedPass);
+            user.setCashBalance(userRegisterDTO.getCashBalance());
             result=userRepo.save(user);
             return result;
         }
@@ -72,8 +78,10 @@ public class UserServiceImpl implements UserService {
                 .authenticate(new UsernamePasswordAuthenticationToken(userCredentialsDTO.getUsername(),userCredentialsDTO.getPassword()));
         if(authentication.isAuthenticated()){
             token=jwtService.generateToken(userCredentialsDTO.getUsername());
+            UserDTO userDTO=new UserDTO();
+            BeanUtils.copyProperties(user,userDTO);
             UserLoginResponseDTO userLoginResponseDTO=UserLoginResponseDTO.builder()
-                    .user(user)
+                    .user(userDTO)
                     .token(token)
                     .build();
             return  userLoginResponseDTO;
@@ -118,7 +126,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("User not found");
         }
         existUser.setUsername(userUpdateDTO.getUsername());
-        existUser.setCashBalance(userUpdateDTO.getCashBalance());
+        existUser.setCashBalance(existUser.getCashBalance().add(userUpdateDTO.getCashBalance()));
         result = userRepo.save(existUser);
         return result;
 

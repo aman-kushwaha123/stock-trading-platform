@@ -1,0 +1,189 @@
+
+<div class="min-h-screen bg-slate-950 p-4 text-white sm:p-6 lg:p-8">
+
+  <!-- Page Header -->
+  <div class="mb-8">
+    <p class="mb-2 text-xs font-semibold uppercase tracking-widest text-emerald-400">
+      Stock Trading Platform / Administration
+    </p>
+
+    <h1 class="text-2xl font-bold sm:text-3xl">
+      User Management
+    </h1>
+
+    <p class="mt-2 text-sm text-slate-400">
+      Manage platform users, permissions and accounts.
+    </p>
+  </div>
+
+  <!-- Table Container -->
+  <div class="overflow-hidden rounded-2xl border border-slate-800
+              bg-slate-700  shadow-xl">
+
+    <!-- Search Header -->
+    <div class="flex flex-col gap-4 border-b border-slate-800 
+                p-5 sm:flex-row sm:items-center sm:justify-between"> 
+
+      <div>
+        <h2 class="text-lg font-semibold">All Users</h2>
+        <p class="mt-1 text-sm text-slate-400">
+          View and manage registered accounts
+        </p>
+      </div>
+
+      <mat-form-field appearance="outline"
+                      class="w-full  sm:w-80 user-search">
+
+        <mat-label>Search by username</mat-label>
+
+        <input
+          matInput
+          (keyup)="applyFilter($event)"
+          placeholder="Search users..."
+          #input
+        />
+
+      </mat-form-field>
+
+    </div>
+
+    <!-- Responsive Table -->
+    <div class="w-full overflow-x-auto">
+
+      <table mat-table
+             [dataSource]="dataSource"
+             class="w-full min-w-[850px] users-table">
+
+        <!-- ID -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+
+          <td mat-cell *matCellDef="let element">
+            <span class="font-medium text-slate-400">
+              #{{ element.id }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Username -->
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef>Username</th>
+
+          <td mat-cell *matCellDef="let element">
+            <div class="flex items-center gap-3">
+
+              <div class="flex h-9 w-9 items-center justify-center
+                          rounded-full bg-emerald-500/10
+                          font-bold text-emerald-400">
+                {{ element.username.charAt(0).toUpperCase() }}
+              </div>
+
+              <span class="font-semibold text-white">
+                {{ element.username }}
+              </span>
+
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Role -->
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef>Role</th>
+
+          <td mat-cell *matCellDef="let element">
+            <span
+              class="rounded-full px-3 py-1 text-xs font-semibold"
+              [ngClass]="element.role === 'ADMIN'
+                ? 'bg-purple-500/10 text-purple-400'
+                : 'bg-blue-500/10 text-blue-400'">
+
+              {{ element.role }}
+
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Cash Balance -->
+        <ng-container matColumnDef="cashBalance">
+          <th mat-header-cell *matHeaderCellDef>Cash Balance</th>
+
+          <td mat-cell *matCellDef="let element">
+            <span class="font-semibold text-emerald-400">
+              {{ element.cashBalance | currency:'INR':'symbol':'1.2-2' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="text-center">
+            Actions
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            <div class="flex items-center justify-center gap-2">
+
+              <!-- Make Admin -->
+              <button
+                type="button"
+                (click)="updateUserRole(element.id)"
+                class="whitespace-nowrap rounded-lg border border-purple-500/30
+                       bg-purple-500/10 px-3 py-2 text-xs font-semibold
+                       text-purple-400 transition hover:bg-purple-500/20">
+                <span *ngIf="element.role=='ADMIN'">Make USER</span>
+                <span *ngIf="element.role=='USER'">Make ADMIN</span>
+              </button>
+
+
+              <!-- Delete -->
+              <button
+                type="button"
+                (click)="onDelete(element.id)"
+                class="rounded-lg border border-red-500/30
+                       bg-red-500/10 px-3 py-2 text-xs font-semibold
+                       text-red-400 transition hover:bg-red-500/20">
+                Delete
+              </button>
+
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Table Rows -->
+        <tr mat-header-row
+            *matHeaderRowDef="displayedColumns">
+        </tr>
+
+        <tr mat-row
+            *matRowDef="let row; columns: displayedColumns;"
+            class="transition hover:bg-slate-800/50">
+        </tr>
+
+        <!-- No Data -->
+        <tr *matNoDataRow>
+          <td [attr.colspan]="displayedColumns.length"
+              class="px-6 py-12 text-center text-slate-400">
+            No users found.
+          </td>
+        </tr>
+
+      </table>
+
+    </div>
+
+    <!-- Pagination -->
+    <div class="border-t border-slate-800">
+      <mat-paginator
+        [length]="totalElements"
+        [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="[1, 5, 7]"
+        showFirstLastButtons
+        aria-label="Select page of users"
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    </div>
+
+  </div>
+
+</div>

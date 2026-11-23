@@ -14,7 +14,7 @@ public class PortfolioSnapshotsController {
     @Autowired
     private PortfolioSnapshotService portfolioSnapshotService;
 
-    @GetMapping("")
+    @GetMapping("/get/all")
     ResponseEntity<Page<PortfolioSnapshot>> getPortfolioSnapshotsByUserId(
             @RequestParam(value="userId") Long userId,
             @RequestParam(value="page") int page,

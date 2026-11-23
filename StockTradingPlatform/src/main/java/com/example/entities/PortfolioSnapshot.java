@@ -51,6 +51,10 @@ public class PortfolioSnapshot {
         this.recordedAt=now;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public User getUser() {
         return user;
     }

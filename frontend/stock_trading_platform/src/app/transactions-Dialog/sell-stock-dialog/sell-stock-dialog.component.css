@@ -1,0 +1,5 @@
+.sell-stock-dialog .mat-mdc-dialog-surface {
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}

@@ -1,5 +1,6 @@
 package com.example.ResponseDTOs;
 
+import com.example.DTOs.UserDTO;
 import com.example.entities.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,6 @@ public class UserLoginResponseDTO {
     @NotNull
     private String token=null;
     @NotNull
-    private User user=null;
+    private UserDTO user=null;
 
 }

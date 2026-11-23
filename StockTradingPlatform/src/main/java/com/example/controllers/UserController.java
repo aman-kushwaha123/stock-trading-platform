@@ -1,6 +1,8 @@
 package com.example.controllers;
 
 import com.example.DTOs.UserCredentialsDTO;
+import com.example.DTOs.UserDTO;
+import com.example.DTOs.UserRegisterDTO;
 import com.example.Enums.UserRoles;
 import com.example.ResponseDTOs.UserLoginResponseDTO;
 import com.example.ResponseDTOs.UserResponse;
@@ -9,19 +11,24 @@ import com.example.entities.User;
 import com.example.repositories.User_Repo;
 import com.example.services.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = "http://localhost:4200",allowCredentials = "true")
+@Tag(
+        name="User and auth related apis.",
+        description = "There are several endpoints such as /user/register ,/user/login for authenticaitons."
+)
 public class UserController {
 
     private final UserService userService;
@@ -34,8 +41,9 @@ public class UserController {
 
 
     @PostMapping("/register")
-    ResponseEntity<Map<String,String>> register(@RequestBody User user){
-                userService.createUser(user);
+    @Operation()
+    ResponseEntity<Map<String,String>> register(@RequestBody UserRegisterDTO userRegisterDTO){
+                userService.createUser(userRegisterDTO);
                 return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "User Successfully Created."));
     }
 
@@ -47,22 +55,37 @@ public class UserController {
     }
 
     @PutMapping("/update/{id}")
-    ResponseEntity<Map<String,String>> updateUser(@PathVariable(value = "id") Long id,
+    ResponseEntity<UserResponse> updateUser(@PathVariable(value = "id") Long id,
                                                  @RequestBody UserUpdateDTO userUpdateDTO)
     {
 
            User userUpdateDTO1=userService.updateUserById(id,userUpdateDTO);
-           return ResponseEntity.ok(Map.of("message","Successfully updated username : "+userUpdateDTO1.getUsername()));
+            UserDTO userDTO=new UserDTO();
+           BeanUtils.copyProperties(userUpdateDTO1,userDTO);
+           UserResponse userResponse=new UserResponse();
+           userResponse.setUser(userDTO);
+           userResponse.setMessage(Map.of("message","Successfully updated."));
+           return ResponseEntity.ok(userResponse);
 
     }
 
-    @PutMapping("/update/roleToAdmin/{userId}")
-    ResponseEntity<Map<String,String>> updateUser(@PathVariable Long userId)
+    @PatchMapping("/update/roleUpdate/{userId}")
+    ResponseEntity<UserResponse> updateUser(@PathVariable Long userId)
     {
         User user=userRepo.findById(userId).orElseThrow(()->new IllegalArgumentException("User not found."));
-        user.setRole(UserRoles.ADMIN);
+        if(user.getRole().equals(UserRoles.USER)){
+            user.setRole(UserRoles.ADMIN);
+        }
+        else{
+            user.setRole(UserRoles.USER);
+        }
         User userUpdateDTO1=userRepo.save(user);
-        return ResponseEntity.ok(Map.of("message","Successfully updated username : "+userUpdateDTO1.getUsername()+"to Admin."));
+        UserDTO userDTO=new UserDTO();
+        BeanUtils.copyProperties(userUpdateDTO1,userDTO);
+        UserResponse userResponse=new UserResponse();
+        userResponse.setUser(userDTO);
+        userResponse.setMessage(Map.of("message","Successfully role updated."));
+        return ResponseEntity.ok(userResponse);
 
     }
 
@@ -70,7 +93,9 @@ public class UserController {
     ResponseEntity<UserResponse> getUserById(@PathVariable(value = "id") Long id){
                UserResponse userResponse=new UserResponse();
                User result= userService.getUserById(id);
-               userResponse.setUser(result);
+               UserDTO userDTO=new UserDTO();
+               BeanUtils.copyProperties(result,userDTO);
+               userResponse.setUser(userDTO);
                userResponse.setMessage(Map.of("message","Successfully"));
                return ResponseEntity.ok(userResponse);
 

@@ -1,0 +1,135 @@
+<div class="min-h-screen bg-slate-950 flex items-center justify-center p-4 py-10">
+
+  <!-- Login Card -->
+  <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-white">
+        Stock<span class="text-emerald-400">Trade</span>
+      </h1>
+
+      <h2 class="text-xl font-semibold text-white mt-5">
+       Login to Your Account.
+      </h2>
+
+      <p class="text-sm text-slate-400 mt-2">
+        Join us and start your trading journey.
+      </p>
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
+
+      <!-- Username -->
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-2">
+          Username
+        </label>
+
+        <input type="text"
+               formControlName="username"
+               placeholder="Enter username"
+               autocomplete="username"
+               class="w-full py-3 rounded-lg bg-slate-950 border border-slate-700 text-white placeholder-slate-500 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors" />
+
+        <p *ngIf="f['username']?.touched && f['username']?.hasError('required')"
+           class="text-xs text-red-400 mt-2">
+          Username is required.
+        </p>
+
+        <p *ngIf="f['username']?.touched && f['username']?.hasError('pattern')"
+           class="text-xs text-red-400 mt-2">
+          Username must start with a letter and contain only letters, numbers, underscores or hyphens.
+        </p>
+
+        <p *ngIf="f['username']?.touched && (f['username']?.hasError('minlength') || f['username']?.hasError('maxlength'))"
+           class="text-xs text-red-400 mt-2">
+          Username must contain 4 to 20 characters.
+        </p>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-2">
+          Password
+        </label>
+
+        <div class="relative">
+          <input [type]="showPassword ? 'text' : 'password'"
+                 formControlName="password"
+                 placeholder="Create password"
+                 autocomplete="new-password"
+                 class="w-full  py-3 rounded-lg bg-slate-950 border border-slate-700 text-white placeholder-slate-500 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors" />
+
+          <button type="button"
+                  (click)="showPassword = !showPassword"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-medium text-slate-400 hover:text-white">
+            {{ showPassword ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+
+        <p *ngIf="f['password']?.touched && f['password']?.hasError('required')"
+           class="text-xs text-red-400 mt-2">
+          Password is required.
+        </p>
+
+        <p *ngIf="f['password']?.touched && (f['password']?.hasError('minlength') || f['password']?.hasError('maxlength'))"
+           class="text-xs text-red-400 mt-2">
+          Password must contain 8 to 20 characters.
+        </p>
+      </div>
+
+      <!-- Confirm Password -->
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-2">
+          Confirm Password
+        </label>
+
+        <div class="relative">
+          <input [type]="showConfirmPassword ? 'text' : 'password'"
+                 formControlName="confirmPassword"
+                 placeholder="Confirm your password"
+                 autocomplete="new-password"
+                 class="w-full  py-3 rounded-lg bg-slate-950 border border-slate-700 text-white placeholder-slate-500 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors" />
+
+          <button type="button"
+                  (click)="showConfirmPassword = !showConfirmPassword"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-medium text-slate-400 hover:text-white">
+            {{ showConfirmPassword ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+
+        <p *ngIf="f['confirmPassword']?.touched && f['confirmPassword']?.hasError('required')"
+           class="text-xs text-red-400 mt-2">
+          Please confirm your password.
+        </p>
+
+        <p *ngIf="f['confirmPassword']?.touched && loginForm.hasError('passwordMismatch')"
+           class="text-xs text-red-400 mt-2">
+          Passwords do not match.
+        </p>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit"
+              [disabled]="loginForm.invalid"
+              class="w-full py-3 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+        Login
+      </button>
+
+    </form>
+
+    <!-- Login Link -->
+    <div class="text-center mt-6">
+      <p class="text-sm text-slate-400">
+        Wanna Register Yourself?
+        <a routerLink="/register"
+           class="text-emerald-400 font-semibold hover:text-emerald-300 no-underline">
+          Register
+        </a>
+      </p>
+    </div>
+
+  </div>
+</div>

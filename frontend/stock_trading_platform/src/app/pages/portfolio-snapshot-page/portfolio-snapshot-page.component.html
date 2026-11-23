@@ -1,0 +1,193 @@
+
+
+<div class="min-h-screen bg-slate-950 p-4 text-white sm:p-6 lg:p-8">
+  <app-market-chart></app-market-chart>
+
+  <!-- Page Header -->
+  <div class="mb-8">
+    <p class="mb-2 text-xs font-semibold uppercase tracking-widest text-emerald-400">
+      Stock Trading Platform / Portfolio Snapshots.
+    </p>
+
+    <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">
+          Portfolio Snapshots
+        </h1>
+
+        <p class="mt-2 text-sm text-slate-400">
+          Track your PortFolio Value.
+        </p>
+      </div>
+    </div>
+  </div>
+
+    <!-- Holding Table Card -->
+  <div class="overflow-hidden rounded-2xl border border-slate-800
+              bg-slate-600 shadow-2xl">
+
+    <!-- Table Header -->
+    <div class="flex flex-col gap-4 border-b border-slate-800
+                p-5 sm:flex-row sm:items-center sm:justify-between">
+
+      <div>
+        <h2 class="text-lg font-semibold text-white">
+          PortFolio Snapshots
+        </h2>
+
+        <p class="mt-1 text-sm text-slate-400">
+          Review all your portfolio fields.
+        </p>
+      </div>
+
+        <!-- Search -->
+      <mat-form-field
+        appearance="outline"
+        class="w-full sm:w-96 transaction-search">
+
+        <mat-label>Search by portfolio fields.</mat-label>
+
+        <input
+          matInput
+          (keyup)="applyFilter($event)"
+          placeholder="Company, symbol, user ID..."
+          #input
+        />
+      </mat-form-field>
+
+    </div>
+
+      <!-- Table -->
+    <div class="w-full overflow-x-auto">
+
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        class="w-full min-w-[1200px] transaction-table">
+
+        <!-- ID -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>Portfolio ID</th>
+
+          <td mat-cell *matCellDef="let element">
+            <span class="font-semibold text-slate-400">
+              #{{ element.id }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- User Name -->
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef>Username</th>
+
+          <td mat-cell *matCellDef="let element">
+            <div class="flex items-center gap-3">
+
+              <span class="font-semibold text-gray-600">
+                {{ element.user.username }}
+              </span>
+
+            </div>
+          </td>
+        </ng-container>
+
+         <!-- Cash Balance -->
+        <ng-container matColumnDef="cashBalance">
+          <th mat-header-cell *matHeaderCellDef>Cash Balance</th>
+
+          <td mat-cell *matCellDef="let element">
+            <span class="font-semibold text-emerald-400">
+              {{ element.cashBalance | currency:'INR':'symbol':'1.2-2' }}
+            </span>
+          </td>
+        </ng-container>
+
+         <!-- Stock Value -->
+        <ng-container matColumnDef="stockValue">
+          <th mat-header-cell *matHeaderCellDef>Stock Value</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="font-medium text-emerald-400">
+              {{ element.stockValue | currency:'INR':'symbol':'1.2-2' }}
+            </span>
+          </td>
+        </ng-container>
+
+
+         <!-- Portfolio Value -->
+        <ng-container matColumnDef="totalPortfolioValue">
+          <th mat-header-cell *matHeaderCellDef>Portfolio Value</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="font-medium text-emerald-400">
+              {{ element.totalPortFolioValue | currency:'INR':'symbol':'1.2-2' }}
+            </span>
+          </td>
+        </ng-container>
+
+
+         <!-- recorded At -->
+        <ng-container matColumnDef="recordedAt">
+          <th mat-header-cell *matHeaderCellDef>recorded At</th>
+
+          <td mat-cell *matCellDef="let element">
+            <div class="text-sm text-slate-300">
+              {{ element.recordedAt | date:'dd MMM yyyy' }}
+            </div>
+
+            <div class="mt-1 text-xs text-slate-500">
+              {{ element.recordedAt | date:'hh:mm a' }}
+            </div>
+          </td>
+        </ng-container>
+
+
+         <!-- Header and Rows -->
+        <tr mat-header-row
+            *matHeaderRowDef="displayedColumns">
+        </tr>
+
+        <tr mat-row
+            *matRowDef="let row; columns: displayedColumns;"
+            class="transition-colors duration-200 hover:bg-slate-800/60">
+        </tr>
+
+        <!-- Empty State -->
+        <tr *matNoDataRow>
+          <td
+            [attr.colspan]="displayedColumns.length"
+            class="px-6 py-16 text-center">
+
+            <div class="flex flex-col items-center gap-2">
+              <span class="text-3xl text-slate-600">↗</span>
+
+              <p class="font-semibold text-slate-300">
+                No transactions found
+              </p>
+
+              <p class="text-sm text-slate-500">
+                Try searching with a different keyword.
+              </p>
+            </div>
+
+          </td>
+        </tr>
+
+      </table>
+
+    </div>
+
+    <!-- Pagination -->
+    <div class="border-t border-slate-800">
+      <mat-paginator
+        [length]="totalElements"
+        [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="[1, 5, 10]"
+        showFirstLastButtons
+        aria-label="Select page of transactions"
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    </div>
+
+  </div>
+
+</div>

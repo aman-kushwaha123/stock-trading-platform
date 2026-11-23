@@ -1,0 +1,133 @@
+<div class="overflow-hidden rounded-2xl border border-slate-700 max-h-[85vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]
+            bg-slate-900 text-white">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between
+              border-b border-slate-700 p-5">
+
+    <div>
+      <h2 class="text-xl font-bold">Buy Stock</h2>
+      <p class="mt-1 text-sm text-slate-400">
+        Place your buy order
+      </p>
+    </div>
+
+    <button type="button" (click)="closeDialog()" class="rounded-lg p-2 text-slate-400
+             hover:bg-slate-800 hover:text-white">
+      ✕
+    </button>
+
+  </div>
+
+  <!-- Stock Information -->
+  <div class="space-y-5 p-5">
+
+    <div class="rounded-xl border border-slate-700
+                bg-slate-800/70 p-4">
+
+      <p class="text-sm text-slate-400">Selected Stock</p>
+
+      <div class="mt-2 flex items-center justify-between">
+
+        <div>
+          <h3 class="text-lg font-bold">
+            {{ stock.symbol }}
+          </h3>
+          <p class="text-sm text-slate-400">
+            {{ stock.companyName }}
+          </p>
+        </div>
+
+        <!--
+• 1 (Minimum integer digits): Shows at least 1 digit before the decimal point. If the value is 0.5, it displays ₹0.50 instead of ₹.50.
+• 2 (Minimum decimal places): Always shows at least 2 digits after the decimal point. Whole numbers like 50 become ₹50.00.
+• 2 (Maximum decimal places): Rounds numbers with more decimals down to 2 digits. For instance, 99.456 rounds to ₹99.46.
+-->
+
+        <div class="text-right">
+          <p class="text-xs text-slate-400">Market Price</p>
+          <p class="text-lg font-bold text-emerald-400">
+            {{ stock.price | currency:'INR':'symbol':'1.2-2' }}
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Quantity -->
+    <div>
+      <label class="mb-2 block text-sm font-medium text-slate-300">
+        Quantity
+      </label>
+
+      <input type="number" min="1" step="1" [(ngModel)]="quantity" class="w-full rounded-lg border border-slate-700
+               bg-slate-950 px-4 py-3 text-white outline-none
+               focus:border-emerald-500" placeholder="Enter quantity" />
+
+      <p *ngIf="!isValid" class="mt-2 text-xs text-red-400">
+        Enter a whole number greater than zero.
+      </p>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="space-y-3 rounded-xl border border-slate-700
+                bg-slate-800/50 p-4">
+
+      <h3 class="font-semibold">Order Summary</h3>
+
+      <div class="flex justify-between text-sm">
+        <span class="text-slate-400">Price per share</span>
+        <span>
+          {{ stock.price | currency:'INR':'symbol':'1.2-2' }}
+        </span>
+      </div>
+
+      <div class="flex justify-between text-sm">
+        <span class="text-slate-400">Quantity</span>
+        <span>{{ quantity || 0 }}</span>
+      </div>
+
+
+      <div class="border-t border-slate-700 pt-3">
+        <div class="flex justify-between">
+          <span class="font-semibold">Available CasBalance.</span>
+
+          <span class="text-xl font-bold text-emerald-400">
+            {{stringUser.cashBalance | currency:'INR':'symbol':'1.2-2' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-700 pt-3">
+        <div class="flex justify-between">
+          <span class="font-semibold">Total Amount</span>
+
+          <span class="text-xl font-bold text-emerald-400">
+            {{ totalAmount | currency:'INR':'symbol':'1.2-2' }}
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-3 pt-2">
+
+      <button type="button" (click)="closeDialog()" class="flex-1 rounded-lg border border-slate-700
+               px-4 py-3 font-semibold text-slate-300
+               transition hover:bg-slate-800">
+        Cancel
+      </button>
+
+      <button type="button" (click)="confirmPurchase()" [disabled]="!isValid" class="flex-1 rounded-lg bg-emerald-500 px-4 py-3
+               font-bold text-slate-950 transition
+               hover:bg-emerald-400
+               disabled:cursor-not-allowed
+               disabled:opacity-40">
+        Confirm Buy
+      </button>
+
+    </div>
+
+  </div>
+</div>

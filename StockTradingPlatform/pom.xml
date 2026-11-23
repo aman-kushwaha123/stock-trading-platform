@@ -82,6 +82,15 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!-- Source: https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter -->
+		<!-- whereas Springfox 3.0.0 was built for Spring Boot 2 and older Java EE (javax.servlet.*)
+		Replace springfox-boot-starter with springdoc-openapi-starter-webmvc-ui, which is the official, actively maintained replacement for Spring Boot 3.x and 4.x:
+		check compatible versions by visiting library official webisites.-->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>3.2.1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa-test</artifactId>

@@ -29,6 +29,13 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity          //this says don't go with default flow go with my flow
 public class SecurityConfig {
+    public static final String[] PUBLIC_URLS={
+            "/user/register",
+            "/user/login",
+            "/v3/api-docs/**",
+            "/swagger-ui/**"    //swagger-ui/index.html
+
+    };
 
     @Autowired
     private UserDetailService userDetailService;
@@ -39,13 +46,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity)throws Exception{
+
         //you are using authorizeHttpRequests() to establish a baseline rule that says:
         // "Nobody passes past this point on the network layer unless they are authenticated."
         httpSecurity.authorizeHttpRequests(request->request
-                        .requestMatchers("/user/register","/user/login").permitAll()
+                        .requestMatchers(PUBLIC_URLS).permitAll()
                         .requestMatchers("/stock/add","/stock/delete/{id}","/stock/delete/{id}").hasRole("ADMIN")
                         .requestMatchers("/user/delete/{id}","/user/get/all",
-                                "/user/update/roleToAdmin/{userId}").hasRole("ADMIN")
+                                "/user/update/roleUpdate/{userId}").hasRole("ADMIN")
                         .anyRequest()
                         .authenticated()    //Requires authentication
                 );
@@ -132,7 +140,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration corsConfiguration=new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
-        corsConfiguration.setAllowedMethods(List.of("POST","GET","PUT","DELETE","OPTIONS"));
+        corsConfiguration.setAllowedMethods(List.of("POST","GET","PUT","DELETE","OPTIONS","PATCH"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setAllowCredentials(true);
 

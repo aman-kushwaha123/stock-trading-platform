@@ -51,7 +51,7 @@ public class Holding {
     @Column(nullable = false)
     private Integer quantity=0;
 
-    @Column(name="total_inverstment",nullable = false,precision=15,scale=2)
+    @Column(name="total_investment",nullable = false,precision=15,scale=2)
     private BigDecimal TotalInvestment=BigDecimal.valueOf(0.00);
 
     // the Average Buy Price (also called Avg Cost) is the average price you paid per share for a specific stock.

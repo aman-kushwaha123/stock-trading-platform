@@ -1,0 +1,70 @@
+<div class="min-h-screen bg-zinc-950 px-4 py-10 text-white">
+  <div class="mx-auto max-w-md rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-lg">
+    
+    <!-- Simple Update Form -->
+    <form [formGroup]="updateForm" (ngSubmit)="updateBalance()"  class="mt-5 space-y-4">
+      <!-- Username -->
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-2">
+          Username
+        </label>
+
+        <input type="text"
+               formControlName="username"
+               placeholder="Enter username"
+               autocomplete="username"
+               class="w-full py-3 rounded-lg bg-slate-950 border border-slate-700 text-white placeholder-slate-500 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors" />
+
+        <p *ngIf="f['username']?.touched && f['username']?.hasError('required')"
+           class="text-xs text-red-400 mt-2">
+          Username is required.
+        </p>
+
+        <p *ngIf="f['username']?.touched && f['username']?.hasError('pattern')"
+           class="text-xs text-red-400 mt-2">
+          Username must start with a letter and contain only letters, numbers, underscores or hyphens.
+        </p>
+
+        <p *ngIf="f['username']?.touched && (f['username']?.hasError('minlength') || f['username']?.hasError('maxlength'))"
+           class="text-xs text-red-400 mt-2">
+          Username must contain 4 to 20 characters.
+        </p>
+      </div>
+
+
+      <div>
+        <label for="cashBalance" class="mb-1.5 block text-sm text-zinc-300">
+          Add Cash Balance (₹)
+        </label>
+        <input
+          id="cashBalance"
+          name="cashBalance"
+          type="number"
+          required
+          min="0"
+          max="10000"
+          step="any"
+          formControlName="cashBalance"
+          class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-2.5 text-white outline-none focus:border-emerald-500"
+          placeholder="Enter amount"
+        />
+
+        @if (f['cashBalance'].invalid && (f['cashBalance'].dirty || f['cashBalance'].touched)) {
+          <p class="mt-1 text-xs text-red-400">Enter a valid amount (0 or more).
+            <br>Minimum 50 rs can be added.
+          </p>
+        }
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="updateForm.invalid || isSubmitting"
+        class="w-full rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {{ isSubmitting ? 'Updating...' : 'Update Balance' }}
+      </button>
+    </form>
+
+  </div>
+</div>
+

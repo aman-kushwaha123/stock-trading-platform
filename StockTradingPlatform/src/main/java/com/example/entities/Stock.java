@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name="stocks")
-public class Stock {
+public class    Stock {
 
     @Id
     @Column(nullable = false,unique = true)
@@ -25,6 +25,7 @@ public class Stock {
     //We use BigDecimal for money instead of double to avoid common floating-point rounding errors in financial calculations.
     @Column(nullable=false,precision = 15,scale=2)
     BigDecimal price;
+    
 
     //parent(user) and child(holding)
     @OneToMany(
